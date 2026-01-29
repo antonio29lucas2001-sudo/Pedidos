@@ -1,116 +1,5 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-<meta charset="UTF-8">
-<title>Pedidos de Salgados</title>
-
-<style>
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
-
-* { box-sizing: border-box; font-family: 'Poppins', sans-serif; }
-
-body {
-    margin: 0;
-    min-height: 100vh;
-    background: linear-gradient(rgba(0,0,0,.6),rgba(0,0,0,.6)),
-    url("https://images.unsplash.com/photo-1604908177225-28f8a47d9e2b");
-    background-size: cover;
-    padding: 30px;
-}
-
-h1, h2 { text-align: center; color: #FFD700; }
-
-.container { max-width: 600px; margin: auto; }
-
-form, .pedido, .painel {
-    background: #ffffffee;
-    padding: 25px;
-    border-radius: 15px;
-    margin-top: 20px;
-}
-
-label { font-weight: 600; display: block; margin-top: 15px; }
-
-select, input {
-    width: 100%;
-    padding: 12px;
-    margin-top: 5px;
-    border-radius: 10px;
-    border: 1px solid #ccc;
-}
-
-button {
-    width: 100%;
-    margin-top: 20px;
-    padding: 15px;
-    background: linear-gradient(45deg,#ff9800,#ff5722);
-    color: #fff;
-    border: none;
-    border-radius: 12px;
-    font-size: 16px;
-    font-weight: bold;
-    cursor: pointer;
-}
-
-button:hover { transform: scale(1.03); }
-
-.pedido {
-    border-left: 6px solid #ff5722;
-}
-
-.hidden { display: none; }
-
-.admin-btn {
-    background: #333;
-    margin-top: 30px;
-}
-</style>
-</head>
-
-<body>
-
-<h1>🍟 Pedido de Salgados 🍟</h1>
-
-<div class="container">
-
-<form id="pedidoForm">
-    <label>🔥 Preparo</label>
-    <select id="preparo" required>
-        <option value="">Selecione</option>
-        <option>Frito</option>
-        <option>Assado</option>
-    </select>
-
-    <label>🧀 Sabor</label>
-    <select id="sabor" required>
-        <option value="">Selecione</option>
-        <option>Queijo</option>
-        <option>Presunto com queijo</option>
-        <option>Coxinha</option>
-        <option>Bolinha de queijo</option>
-    </select>
-
-    <label>🚚 Entrega ou retirada</label>
-    <select id="entrega" required>
-        <option value="">Selecione</option>
-        <option>Entrega</option>
-        <option>Buscar no local</option>
-    </select>
-
-    <button type="submit">📲 Enviar pedido no WhatsApp</button>
-</form>
-
-<button class="admin-btn" onclick="abrirPainel()">🔒 Painel do Atendente</button>
-
-<div id="painel" class="painel hidden">
-    <h2>📋 Pedidos Recebidos</h2>
-    <div id="listaPedidos"></div>
-</div>
-
-</div>
-
 <script>
-const telefoneWhatsApp = "5521974856392"; // <-- TROQUE AQUI
+const telefoneWhatsApp = "5599999999999"; // TROQUE PELO SEU NÚMERO
 const senhaPainel = "1234";
 
 let numeroPedido = localStorage.getItem("numeroPedido");
@@ -128,7 +17,7 @@ function abrirPainel() {
 document.getElementById("pedidoForm").addEventListener("submit", function(e) {
     e.preventDefault();
 
-    const preparo = preparo.value;
+    const preparo = document.getElementById("preparo").value;
     const sabor = document.getElementById("sabor").value;
     const entrega = document.getElementById("entrega").value;
 
@@ -138,20 +27,26 @@ document.getElementById("pedidoForm").addEventListener("submit", function(e) {
 🥟 Sabor: ${sabor}
 🚚 Entrega: ${entrega}`;
 
+    // Abre WhatsApp
     const url = `https://wa.me/${telefoneWhatsApp}?text=${encodeURIComponent(mensagem)}`;
     window.open(url, "_blank");
 
+    // Mostra no painel
     const pedidoDiv = document.createElement("div");
     pedidoDiv.className = "pedido";
-    pedidoDiv.innerHTML = `<strong>Pedido Nº ${numeroPedido}</strong><br>${mensagem.replace(/\n/g,"<br>")}`;
+    pedidoDiv.innerHTML = `
+        <strong>Pedido Nº ${numeroPedido}</strong><br>
+        🍳 Preparo: ${preparo}<br>
+        🥟 Sabor: ${sabor}<br>
+        🚚 Entrega: ${entrega}
+    `;
+
     document.getElementById("listaPedidos").prepend(pedidoDiv);
 
     numeroPedido++;
     localStorage.setItem("numeroPedido", numeroPedido);
+
     this.reset();
 });
 </script>
-
-</body>
-</html>
 
