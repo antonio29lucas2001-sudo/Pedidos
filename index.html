@@ -7,103 +7,62 @@
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
 
-* {
-    box-sizing: border-box;
-    font-family: 'Poppins', sans-serif;
-}
+* { box-sizing: border-box; font-family: 'Poppins', sans-serif; }
 
 body {
     margin: 0;
     min-height: 100vh;
-    background: linear-gradient(
-        rgba(0,0,0,0.6),
-        rgba(0,0,0,0.6)
-    ),
+    background: linear-gradient(rgba(0,0,0,.6),rgba(0,0,0,.6)),
     url("https://images.unsplash.com/photo-1604908177225-28f8a47d9e2b");
     background-size: cover;
-    background-position: center;
     padding: 30px;
 }
 
-h1 {
-    text-align: center;
-    color: #FFD700;
-    margin-bottom: 25px;
-    font-size: 2.5rem;
-}
+h1, h2 { text-align: center; color: #FFD700; }
 
-.container {
-    max-width: 600px;
-    margin: auto;
-}
+.container { max-width: 600px; margin: auto; }
 
-form {
+form, .pedido, .painel {
     background: #ffffffee;
     padding: 25px;
     border-radius: 15px;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+    margin-top: 20px;
 }
 
-label {
-    font-weight: 600;
-    margin-top: 15px;
-    display: block;
-}
+label { font-weight: 600; display: block; margin-top: 15px; }
 
-select {
+select, input {
     width: 100%;
     padding: 12px;
     margin-top: 5px;
     border-radius: 10px;
     border: 1px solid #ccc;
-    font-size: 16px;
 }
 
 button {
     width: 100%;
-    margin-top: 25px;
+    margin-top: 20px;
     padding: 15px;
-    background: linear-gradient(45deg, #ff9800, #ff5722);
-    color: white;
+    background: linear-gradient(45deg,#ff9800,#ff5722);
+    color: #fff;
     border: none;
-    font-size: 18px;
-    font-weight: bold;
     border-radius: 12px;
+    font-size: 16px;
+    font-weight: bold;
     cursor: pointer;
 }
 
-button:hover {
-    transform: scale(1.03);
-    transition: 0.2s;
-}
+button:hover { transform: scale(1.03); }
 
 .pedido {
-    background: #fff;
-    margin-top: 20px;
-    padding: 18px;
-    border-radius: 15px;
     border-left: 6px solid #ff5722;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
 }
 
-.pedido strong {
-    color: #ff5722;
-    font-size: 18px;
-}
+.hidden { display: none; }
 
-footer {
-    text-align: center;
+.admin-btn {
+    background: #333;
     margin-top: 30px;
-    color: #fff;
-    opacity: 0.8;
-    font-size: 14px;
-}
-
-/* RESPONSIVO */
-@media (max-width: 600px) {
-    h1 {
-        font-size: 2rem;
-    }
 }
 </style>
 </head>
@@ -115,15 +74,14 @@ footer {
 <div class="container">
 
 <form id="pedidoForm">
-
-    <label>🔥 Salgado frito ou assado?</label>
+    <label>🔥 Preparo</label>
     <select id="preparo" required>
         <option value="">Selecione</option>
         <option>Frito</option>
         <option>Assado</option>
     </select>
 
-    <label>🧀 Tipo de sabor</label>
+    <label>🧀 Sabor</label>
     <select id="sabor" required>
         <option value="">Selecione</option>
         <option>Queijo</option>
@@ -132,60 +90,68 @@ footer {
         <option>Bolinha de queijo</option>
     </select>
 
-    <label>🚚 Entrega ou retirada?</label>
+    <label>🚚 Entrega ou retirada</label>
     <select id="entrega" required>
         <option value="">Selecione</option>
         <option>Entrega</option>
         <option>Buscar no local</option>
     </select>
 
-    <button type="submit">📋 Registrar Pedido</button>
-
+    <button type="submit">📲 Enviar pedido no WhatsApp</button>
 </form>
 
-<div id="listaPedidos"></div>
+<button class="admin-btn" onclick="abrirPainel()">🔒 Painel do Atendente</button>
+
+<div id="painel" class="painel hidden">
+    <h2>📋 Pedidos Recebidos</h2>
+    <div id="listaPedidos"></div>
+</div>
 
 </div>
 
-<footer>
-    Sistema de pedidos de salgados
-</footer>
-
 <script>
-let numeroPedido = localStorage.getItem("numeroPedido");
+const telefoneWhatsApp = "5521974856392"; // <-- TROQUE AQUI
+const senhaPainel = "1234";
 
-if (numeroPedido === null) {
-    numeroPedido = 0;
-} else {
-    numeroPedido = parseInt(numeroPedido);
+let numeroPedido = localStorage.getItem("numeroPedido");
+if (!numeroPedido) numeroPedido = 0;
+
+function abrirPainel() {
+    const senha = prompt("Digite a senha do painel:");
+    if (senha === senhaPainel) {
+        document.getElementById("painel").classList.remove("hidden");
+    } else {
+        alert("Senha incorreta!");
+    }
 }
 
 document.getElementById("pedidoForm").addEventListener("submit", function(e) {
     e.preventDefault();
 
-    const preparo = document.getElementById("preparo").value;
+    const preparo = preparo.value;
     const sabor = document.getElementById("sabor").value;
     const entrega = document.getElementById("entrega").value;
 
-    const pedido = document.createElement("div");
-    pedido.className = "pedido";
-    pedido.innerHTML = `
-        <strong>Pedido Nº ${numeroPedido}</strong><br>
-        🍳 Preparo: ${preparo}<br>
-        🥟 Sabor: ${sabor}<br>
-        🚚 Entrega: ${entrega}
-    `;
+    const mensagem =
+`🧾 Pedido Nº ${numeroPedido}
+🍳 Preparo: ${preparo}
+🥟 Sabor: ${sabor}
+🚚 Entrega: ${entrega}`;
 
-    document.getElementById("listaPedidos").prepend(pedido);
+    const url = `https://wa.me/${telefoneWhatsApp}?text=${encodeURIComponent(mensagem)}`;
+    window.open(url, "_blank");
+
+    const pedidoDiv = document.createElement("div");
+    pedidoDiv.className = "pedido";
+    pedidoDiv.innerHTML = `<strong>Pedido Nº ${numeroPedido}</strong><br>${mensagem.replace(/\n/g,"<br>")}`;
+    document.getElementById("listaPedidos").prepend(pedidoDiv);
 
     numeroPedido++;
     localStorage.setItem("numeroPedido", numeroPedido);
-
-    document.getElementById("pedidoForm").reset();
+    this.reset();
 });
 </script>
 
 </body>
 </html>
-
 
