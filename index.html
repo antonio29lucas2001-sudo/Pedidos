@@ -109,8 +109,29 @@ button:hover { transform: scale(1.03); }
 
 </div>
 
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
 <script>
-const telefoneWhatsApp = "21974856392"; // TROQUE PELO SEU NÚMERO
+
+// Import the functions you need from the SDKs you need
+import { initializeApp } from "firebase/app";
+// TODO: Add SDKs for Firebase products that you want to use
+// https://firebase.google.com/docs/web/setup#available-libraries
+
+// Your web app's Firebase configuration
+const firebaseConfig = {
+  apiKey: "AIzaSyACHSslZhIJFXHBDqxxpoHN2ewvK-WpYJU",
+  authDomain: "pedidos-salgados.firebaseapp.com",
+  projectId: "pedidos-salgados",
+  storageBucket: "pedidos-salgados.firebasestorage.app",
+  messagingSenderId: "1097493504381",
+  appId: "1:1097493504381:web:7d84146eaeca038e56ac14"
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+    
+const telefoneWhatsApp = "5521974856392"; // TROQUE PELO SEU NÚMERO
 const senhaPainel = "8456";
 
 let numeroPedido = localStorage.getItem("numeroPedido");
@@ -119,7 +140,9 @@ if (!numeroPedido) numeroPedido = 0;
 function abrirPainel() {
     const senha = prompt("Digite a senha do painel:");
     if (senha === senhaPainel) {
-        document.getElementById("painel").classList.remove("hidden");
+       document.getElementById("painel").classList.remove("hidden");
+carregarPedidos();
+
     } else {
         alert("Senha incorreta!");
     }
@@ -143,9 +166,15 @@ document.getElementById("pedidoForm").addEventListener("submit", function(e) {
     window.open(url, "_blank");
 
     // Mostra no painel
-    const pedidoDiv = document.createElement("div");
-    pedidoDiv.className = "pedido";
-    pedidoDiv.innerHTML = `
+   // Salva pedido no Firebase
+db.collection("pedidos").add({
+    numero: numeroPedido,
+    preparo,
+    sabor,
+    entrega,
+    data: new Date()
+});
+
         <strong>Pedido Nº ${numeroPedido}</strong><br>
         🍳 Preparo: ${preparo}<br>
         🥟 Sabor: ${sabor}<br>
@@ -159,7 +188,29 @@ document.getElementById("pedidoForm").addEventListener("submit", function(e) {
 
     this.reset();
 });
+
+function carregarPedidos() {
+    db.collection("pedidos")
+      .orderBy("data", "desc")
+      .onSnapshot(snapshot => {
+        const lista = document.getElementById("listaPedidos");
+        lista.innerHTML = "";
+        snapshot.forEach(doc => {
+            const p = doc.data();
+            lista.innerHTML += `
+              <div class="pedido">
+                <strong>Pedido Nº ${p.numero}</strong><br>
+                🍳 ${p.preparo}<br>
+                🥟 ${p.sabor}<br>
+                🚚 ${p.entrega}
+              </div>
+            `;
+        });
+      });
+}
+
 </script>
 
 </body>
 </html>
+
