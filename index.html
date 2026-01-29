@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Pedidos de Salgados</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f4f4;
+            padding: 20px;
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        form {
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            max-width: 500px;
+            margin: auto;
+        }
+
+        label {
+            display: block;
+            margin-top: 15px;
+            font-weight: bold;
+        }
+
+        select, button {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+        }
+
+        button {
+            margin-top: 20px;
+            background: #28a745;
+            color: white;
+            border: none;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        button:hover {
+            background: #218838;
+        }
+
+        .pedido {
+            background: #fff;
+            margin: 20px auto;
+            padding: 15px;
+            border-radius: 8px;
+            max-width: 500px;
+            border-left: 5px solid #28a745;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Cadastro de Pedidos</h1>
+
+<form id="pedidoForm">
+    <label>Salgado frito ou assado?</label>
+    <select id="preparo" required>
+        <option value="">Selecione</option>
+        <option value="Frito">Frito</option>
+        <option value="Assado">Assado</option>
+    </select>
+
+    <label>Tipo de sabor</label>
+    <select id="sabor" required>
+        <option value="">Selecione</option>
+        <option value="Queijo">Queijo</option>
+        <option value="Presunto com queijo">Presunto com queijo</option>
+        <option value="Coxinha">Coxinha</option>
+        <option value="Bolinha de queijo">Bolinha de queijo</option>
+    </select>
+
+    <label>Entrega ou vem buscar?</label>
+    <select id="entrega" required>
+        <option value="">Selecione</option>
+        <option value="Entrega">Entrega</option>
+        <option value="Buscar no local">Buscar no local</option>
+    </select>
+
+    <button type="submit">Registrar Pedido</button>
+</form>
+
+<div id="listaPedidos"></div>
+
+<script>
+    // Recupera o número do pedido salvo ou inicia em 0
+    let numeroPedido = localStorage.getItem("numeroPedido");
+    if (numeroPedido === null) {
+        numeroPedido = 0;
+    } else {
+        numeroPedido = parseInt(numeroPedido);
+    }
+
+    document.getElementById("pedidoForm").addEventListener("submit", function(e) {
+        e.preventDefault();
+
+        const preparo = document.getElementById("preparo").value;
+        const sabor = document.getElementById("sabor").value;
+        const entrega = document.getElementById("entrega").value;
+
+        const pedidoDiv = document.createElement("div");
+        pedidoDiv.className = "pedido";
+        pedidoDiv.innerHTML = `
+            <strong>Pedido Nº ${numeroPedido}</strong><br>
+            Preparo: ${preparo}<br>
+            Sabor: ${sabor}<br>
+            Entrega: ${entrega}
+        `;
+
+        document.getElementById("listaPedidos").prepend(pedidoDiv);
+
+        // Incrementa o número do pedido
+        numeroPedido++;
+        localStorage.setItem("numeroPedido", numeroPedido);
+
+        // Limpa o formulário
+        document.getElementById("pedidoForm").reset();
+    });
+</script>
+
+</body>
+</html>
