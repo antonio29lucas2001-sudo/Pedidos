@@ -1,131 +1,191 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <title>Pedidos de Salgados</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background: #f4f4f4;
-            padding: 20px;
-        }
+<meta charset="UTF-8">
+<title>Pedidos de Salgados</title>
 
-        h1 {
-            text-align: center;
-        }
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
 
-        form {
-            background: #fff;
-            padding: 20px;
-            border-radius: 8px;
-            max-width: 500px;
-            margin: auto;
-        }
+* {
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
 
-        label {
-            display: block;
-            margin-top: 15px;
-            font-weight: bold;
-        }
+body {
+    margin: 0;
+    min-height: 100vh;
+    background: linear-gradient(
+        rgba(0,0,0,0.6),
+        rgba(0,0,0,0.6)
+    ),
+    url("https://images.unsplash.com/photo-1604908177225-28f8a47d9e2b");
+    background-size: cover;
+    background-position: center;
+    padding: 30px;
+}
 
-        select, button {
-            width: 100%;
-            padding: 10px;
-            margin-top: 5px;
-        }
+h1 {
+    text-align: center;
+    color: #FFD700;
+    margin-bottom: 25px;
+    font-size: 2.5rem;
+}
 
-        button {
-            margin-top: 20px;
-            background: #28a745;
-            color: white;
-            border: none;
-            font-size: 16px;
-            cursor: pointer;
-            border-radius: 5px;
-        }
+.container {
+    max-width: 600px;
+    margin: auto;
+}
 
-        button:hover {
-            background: #218838;
-        }
+form {
+    background: #ffffffee;
+    padding: 25px;
+    border-radius: 15px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+}
 
-        .pedido {
-            background: #fff;
-            margin: 20px auto;
-            padding: 15px;
-            border-radius: 8px;
-            max-width: 500px;
-            border-left: 5px solid #28a745;
-        }
-    </style>
+label {
+    font-weight: 600;
+    margin-top: 15px;
+    display: block;
+}
+
+select {
+    width: 100%;
+    padding: 12px;
+    margin-top: 5px;
+    border-radius: 10px;
+    border: 1px solid #ccc;
+    font-size: 16px;
+}
+
+button {
+    width: 100%;
+    margin-top: 25px;
+    padding: 15px;
+    background: linear-gradient(45deg, #ff9800, #ff5722);
+    color: white;
+    border: none;
+    font-size: 18px;
+    font-weight: bold;
+    border-radius: 12px;
+    cursor: pointer;
+}
+
+button:hover {
+    transform: scale(1.03);
+    transition: 0.2s;
+}
+
+.pedido {
+    background: #fff;
+    margin-top: 20px;
+    padding: 18px;
+    border-radius: 15px;
+    border-left: 6px solid #ff5722;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+.pedido strong {
+    color: #ff5722;
+    font-size: 18px;
+}
+
+footer {
+    text-align: center;
+    margin-top: 30px;
+    color: #fff;
+    opacity: 0.8;
+    font-size: 14px;
+}
+
+/* RESPONSIVO */
+@media (max-width: 600px) {
+    h1 {
+        font-size: 2rem;
+    }
+}
+</style>
 </head>
+
 <body>
 
-<h1>Cadastro de Pedidos</h1>
+<h1>🍟 Pedido de Salgados 🍟</h1>
+
+<div class="container">
 
 <form id="pedidoForm">
-    <label>Salgado frito ou assado?</label>
+
+    <label>🔥 Salgado frito ou assado?</label>
     <select id="preparo" required>
         <option value="">Selecione</option>
-        <option value="Frito">Frito</option>
-        <option value="Assado">Assado</option>
+        <option>Frito</option>
+        <option>Assado</option>
     </select>
 
-    <label>Tipo de sabor</label>
+    <label>🧀 Tipo de sabor</label>
     <select id="sabor" required>
         <option value="">Selecione</option>
-        <option value="Queijo">Queijo</option>
-        <option value="Presunto com queijo">Presunto com queijo</option>
-        <option value="Coxinha">Coxinha</option>
-        <option value="Bolinha de queijo">Bolinha de queijo</option>
+        <option>Queijo</option>
+        <option>Presunto com queijo</option>
+        <option>Coxinha</option>
+        <option>Bolinha de queijo</option>
     </select>
 
-    <label>Entrega ou vem buscar?</label>
+    <label>🚚 Entrega ou retirada?</label>
     <select id="entrega" required>
         <option value="">Selecione</option>
-        <option value="Entrega">Entrega</option>
-        <option value="Buscar no local">Buscar no local</option>
+        <option>Entrega</option>
+        <option>Buscar no local</option>
     </select>
 
-    <button type="submit">Registrar Pedido</button>
+    <button type="submit">📋 Registrar Pedido</button>
+
 </form>
 
 <div id="listaPedidos"></div>
 
+</div>
+
+<footer>
+    Sistema de pedidos de salgados
+</footer>
+
 <script>
-    // Recupera o número do pedido salvo ou inicia em 0
-    let numeroPedido = localStorage.getItem("numeroPedido");
-    if (numeroPedido === null) {
-        numeroPedido = 0;
-    } else {
-        numeroPedido = parseInt(numeroPedido);
-    }
+let numeroPedido = localStorage.getItem("numeroPedido");
 
-    document.getElementById("pedidoForm").addEventListener("submit", function(e) {
-        e.preventDefault();
+if (numeroPedido === null) {
+    numeroPedido = 0;
+} else {
+    numeroPedido = parseInt(numeroPedido);
+}
 
-        const preparo = document.getElementById("preparo").value;
-        const sabor = document.getElementById("sabor").value;
-        const entrega = document.getElementById("entrega").value;
+document.getElementById("pedidoForm").addEventListener("submit", function(e) {
+    e.preventDefault();
 
-        const pedidoDiv = document.createElement("div");
-        pedidoDiv.className = "pedido";
-        pedidoDiv.innerHTML = `
-            <strong>Pedido Nº ${numeroPedido}</strong><br>
-            Preparo: ${preparo}<br>
-            Sabor: ${sabor}<br>
-            Entrega: ${entrega}
-        `;
+    const preparo = document.getElementById("preparo").value;
+    const sabor = document.getElementById("sabor").value;
+    const entrega = document.getElementById("entrega").value;
 
-        document.getElementById("listaPedidos").prepend(pedidoDiv);
+    const pedido = document.createElement("div");
+    pedido.className = "pedido";
+    pedido.innerHTML = `
+        <strong>Pedido Nº ${numeroPedido}</strong><br>
+        🍳 Preparo: ${preparo}<br>
+        🥟 Sabor: ${sabor}<br>
+        🚚 Entrega: ${entrega}
+    `;
 
-        // Incrementa o número do pedido
-        numeroPedido++;
-        localStorage.setItem("numeroPedido", numeroPedido);
+    document.getElementById("listaPedidos").prepend(pedido);
 
-        // Limpa o formulário
-        document.getElementById("pedidoForm").reset();
-    });
+    numeroPedido++;
+    localStorage.setItem("numeroPedido", numeroPedido);
+
+    document.getElementById("pedidoForm").reset();
+});
 </script>
 
 </body>
 </html>
+
+
